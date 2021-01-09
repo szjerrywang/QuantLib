@@ -1,7 +1,7 @@
 /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 /*
- Copyright (C) 2015 Johannes Goettker-Schnetmann
+ Copyright (C) 2015 Johannes Göttker-Schnetmann
  Copyright (C) 2015 Klaus Spanderen
 
  This file is part of QuantLib, a free-software/open-source library
@@ -59,7 +59,7 @@ namespace QuantLib {
             Time t0, Time t1, Size vGrid,
             Real v0, const HestonSLVFokkerPlanckFdmParams& params) {
 
-            std::vector<boost::tuple<Real, Real, bool> > cPoints;
+            std::vector<ext::tuple<Real, Real, bool> > cPoints;
 
             const Real v0Density = params.v0Density;
             const Real upperBoundDensity = params.vUpperBoundDensity;
@@ -85,9 +85,9 @@ namespace QuantLib {
                     const Real v0Center = std::log(v0);
 
                     cPoints +=
-                        boost::make_tuple(lowerBound, lowerBoundDensity, false),
-                        boost::make_tuple(v0Center, v0Density, true),
-                        boost::make_tuple(upperBound, upperBoundDensity, false);
+                        ext::make_tuple(lowerBound, lowerBoundDensity, false),
+                        ext::make_tuple(v0Center, v0Density, true),
+                        ext::make_tuple(upperBound, upperBoundDensity, false);
 
                     return ext::make_shared<Concentrating1dMesher>(
                         lowerBound, upperBound, vGrid, cPoints, 1e-8);
@@ -98,9 +98,9 @@ namespace QuantLib {
                       const Real v0Center = v0;
 
                       cPoints +=
-                          boost::make_tuple(lowerBound, lowerBoundDensity, false),
-                          boost::make_tuple(v0Center, v0Density, true),
-                          boost::make_tuple(upperBound, upperBoundDensity, false);
+                          ext::make_tuple(lowerBound, lowerBoundDensity, false),
+                          ext::make_tuple(v0Center, v0Density, true),
+                          ext::make_tuple(upperBound, upperBoundDensity, false);
 
                       return ext::make_shared<Concentrating1dMesher>(
                           lowerBound, upperBound, vGrid, cPoints, 1e-8);
@@ -111,9 +111,9 @@ namespace QuantLib {
                     const Real v0Center = v0;
 
                     cPoints +=
-                        boost::make_tuple(lowerBound, lowerBoundDensity, false),
-                        boost::make_tuple(v0Center, v0Density, true),
-                        boost::make_tuple(upperBound, upperBoundDensity, false);
+                        ext::make_tuple(lowerBound, lowerBoundDensity, false),
+                        ext::make_tuple(v0Center, v0Density, true),
+                        ext::make_tuple(upperBound, upperBoundDensity, false);
 
                     return ext::make_shared<Concentrating1dMesher>(
                         lowerBound, upperBound, vGrid, cPoints, 1e-8);

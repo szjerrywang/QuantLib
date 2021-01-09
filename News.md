@@ -1,128 +1,69 @@
-Changes for QuantLib 1.18:
+Changes for QuantLib 1.21:
 ==========================
 
-QuantLib 1.18 includes 34 pull requests from several contributors.
+QuantLib 1.21 includes 24 pull requests from several contributors.
 
 The most notable changes are included below.
 A detailed list of changes is available in ChangeLog.txt and at
-<https://github.com/lballabio/QuantLib/milestone/14?closed=1>.
+<https://github.com/lballabio/QuantLib/milestone/17?closed=1>.
 
 Portability
 -----------
 
-- As announced in the past release, support of Visual C++ 2010 is
-  dropped.  Also, we'll probably deprecate Visual C++ 2012 in the next
-  release in order to drop it around the end of 2020.
-
-Build
------
-
-- Cmake now installs headers with the correct folder hierarchy (thanks
-  to Cheng Li).
-
-- The `--enable-unity-build` flag passed to configure now also causes
-  the test suite to be built as a single source file.
-
-- The Visual Studio projects now allow enabling unity builds as
-  described at
-  <https://devblogs.microsoft.com/cppblog/support-for-unity-jumbo-files-in-visual-studio-2017-15-8-experimental/>
-
-Term structures
----------------
-
-- A new `GlobalBootstrap` class can now be used with
-  `PiecewiseYieldCurve` and other bootstrapped curves (thanks to Peter
-  Caspers).  It allows to produce curves close to Bloomberg's.
-
-- The experimental `SofrFutureRateHelper` class and its parent
-  `OvernightIndexFutureRateHelper` can now choose to use either
-  compounding or averaging, in order to accommodate different
-  conventions for 1M and 3M SOFR futures (thanks to GitHub user
-  `tani3010`).
-
-- The `FraRateHelper` class has new constructors that take IMM start /
-  end offsets (thanks to Peter Caspers).
-
-- It is now possible to pass explicit minimum and maximum values to
-  the `IterativeBootstrap` class.  The accuracy parameter was also
-  moved to the same class; passing it to the curve constructor is now
-  deprecated.
+- As previously announced, this is the last release to support Visual
+  C++ 2012.  Starting from next release, VC++ 2013 or later will be
+  required in order to enable use of C++11 features.
 
 Instruments
 -----------
 
-- It is now possible to build fixed-rate bonds with an arbitrary
-  schedule, even without a regular tenor (thanks to Steven Van Haren).
+- Improve date generation for CDS schedules under the post-big-bang
+  rules (thanks to Francis Duffy).
 
-Models
-------
+- Amortizing fixed-rate bonds can now use a generic `InterestRate`
+  object (thanks to Piter Dias).
 
-- It is now possible to use normal volatilities to calibrate a
-  short-rate model over caps.
+- Added Monte Carlo pricer for discrete-average arithmetic Asian
+  options under the Heston model (thanks to Jack Gillett).
+
+- Added analytic and Monte Carlo pricers for discrete-average
+  geometric Asian options under the Heston model (thanks to Jack
+  Gillett).  Together, they can also be used as a control variate in
+  Monte Carlo models for arithmetic Asian options.
+
+- Added analytic pricer for continuous-average geometric Asian
+  options under the Heston model (thanks to Jack Gillett).
+
+- Added analytic pricer for forward options under the Heston model
+  (thanks to Jack Gillett).
+
+- Added Monte Carlo pricers for forward options under the
+  Black-Scholes and the Heston models (thanks to Jack Gillett).
+
+Term structures
+---------------
+
+- Added Dutch regulatory term structure, a.k.a. ultimate forward term
+  structure (thanks to Marcin Rybacki).
+
+- Generalized exponential spline fitting to an arbitrary number of
+  parameters; it is now also possible to fix kappa (thanks to David
+  Sansom).
+
+- Fixed averaging period for 1-month SOFR futures rate helper (thanks
+  to Eisuke Tani).
 
 Date/time
 ---------
 
-- The Austrian calendar was added (thanks to Benjamin Schwendinger).
+- Fixed a bug and added 2017 holidays in Thailand calendar (thanks to
+  GitHub user `phil-zxx` for the heads-up).
 
-- The German calendar incorrectly listed December 31st as a holiday;
-  this is now fixed (thanks to Prasad Somwanshi).
+- Updated Chinese calendar for 2021 (thanks to Cheng Li).
 
-- Chinese holidays were updated for 2020 and the coronavirus event
-  (thanks to Cheng Li).
-
-- South Korea holidays were updated for 2016-2020 (thanks to GitHub
-  user `fayce66`).
-
-- In the calendar class, `holidayList` is now an instance method; the
-  static version is deprecated.  The `businessDayList` method was also
-  added.  (Thanks to Piotr Siejda.)
-
-- A bug in the 30/360 German day counter was fixed (thanks to Kobe
-  Young for the heads-up).
-
-Optimizers
-----------
-
-- The differential evolution optimizer was updated (thanks to Peter
-  Caspers).
-
-Currencies
-----------
-
-- Added Kazakstani Tenge to currencies (thanks to Jonathan Barber).
-
-Deprecated features
--------------------
-
-- Features deprecate in version 1.14 were removed: one of the
-  constructors of the `BSMOperator` class, the whole `OperatorFactory`
-  class, and the typedef `CalibrationHelper` which was used to alias
-  the `BlackCalibrationHelper` class.
-
-- The `CalibrationHelperBase` class is now called
-  `CalibrationHelper`. The old name remains as a typedef but is
-  deprecated.
-
-- The overload of `CalibratedModel::calibrate` and
-  `CalibratedModel::value` taking a vector of
-  `BlackCalibrationHelper`s are deprecated in favor of the ones taking
-  a vector of `CalibrationHelper`s.
-
-- The static method `Calendar::holidayList` is deprecated in favor of
-  the instance method by the same name.
-
-- The constructors of `PiecewiseDefaultCurve` and
-  `PiecewiseYieldCurve` taking an accuracy parameter are deprecated in
-  favor of passing the parameter to an instance of the bootstrap
-  class.
-
-- The constructors of `BondHelper` and derived classes taking a
-  boolean flag to choose between clean and dirty price are deprecated
-  in favor of the ones taking a `Bond::Price::Type` argument.  The
-  `useCleanPrice` method is also deprecated in favor of `priceType`.
+- Updated Japanese calendar for 2021 (thanks to Eisuke Tani).
 
 
-Thanks go also to Ralf Konrad, Klaus Spanderen, Carlos Fidel Selva
-Ochoa, F. Eugene Aumson and Francois Botha for smaller fixes,
-enhancements, and bug reports.
+Thanks go also to Francois Botha, Peter Caspers, Ralf Konrad, Matthias
+Siemering, Klaus Spanderen and Joseph Wang for smaller fixes,
+enhancements and bug reports.

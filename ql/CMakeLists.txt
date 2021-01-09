@@ -47,6 +47,8 @@ set(QuantLib_SRC
     experimental/amortizingbonds/amortizingcmsratebond.cpp
     experimental/amortizingbonds/amortizingfixedratebond.cpp
     experimental/amortizingbonds/amortizingfloatingratebond.cpp
+    experimental/asian/analytic_cont_geom_av_price_heston.cpp
+    experimental/asian/analytic_discr_geom_av_price_heston.cpp
     experimental/averageois/arithmeticaverageois.cpp
     experimental/averageois/arithmeticoisratehelper.cpp
     experimental/averageois/averageoiscouponpricer.cpp
@@ -183,6 +185,7 @@ set(QuantLib_SRC
     experimental/finitedifferences/fdsimpleklugeextouvppengine.cpp
     experimental/finitedifferences/glued1dmesher.cpp
     experimental/finitedifferences/vanillavppoption.cpp
+    experimental/forward/analytichestonforwardeuropeanengine.cpp
     experimental/futures/overnightindexfuture.cpp
     experimental/futures/overnightindexfutureratehelper.cpp
     experimental/fx/blackdeltacalculator.cpp
@@ -373,6 +376,7 @@ set(QuantLib_SRC
     math/factorial.cpp
     math/incompletegamma.cpp
     math/integrals/discreteintegrals.cpp
+    math/integrals/exponentialintegrals.cpp
     math/integrals/filonintegral.cpp
     math/integrals/gaussianorthogonalpolynomial.cpp
     math/integrals/gaussianquadratures.cpp
@@ -453,6 +457,7 @@ set(QuantLib_SRC
     methods/finitedifferences/operators/fdmg2op.cpp
     methods/finitedifferences/operators/fdmhestonhullwhiteop.cpp
     methods/finitedifferences/operators/fdmhestonop.cpp
+    methods/finitedifferences/operators/fdmcirop.cpp
     methods/finitedifferences/operators/fdmhullwhiteop.cpp
     methods/finitedifferences/operators/fdmlinearoplayout.cpp
     methods/finitedifferences/operators/fdmlocalvolfwdop.cpp
@@ -483,6 +488,7 @@ set(QuantLib_SRC
     methods/finitedifferences/solvers/fdmg2solver.cpp
     methods/finitedifferences/solvers/fdmhestonhullwhitesolver.cpp
     methods/finitedifferences/solvers/fdmhestonsolver.cpp
+    methods/finitedifferences/solvers/fdmcirsolver.cpp
     methods/finitedifferences/solvers/fdmhullwhitesolver.cpp
     methods/finitedifferences/solvers/fdmsimple2dbssolver.cpp
     methods/finitedifferences/stepconditions/fdmamericanstepcondition.cpp
@@ -648,8 +654,10 @@ set(QuantLib_SRC
     pricingengines/asian/analytic_discr_geom_av_strike.cpp
     pricingengines/asian/fdblackscholesasianengine.cpp
     pricingengines/asian/mc_discr_arith_av_price.cpp
+    pricingengines/asian/mc_discr_arith_av_price_heston.cpp
     pricingengines/asian/mc_discr_arith_av_strike.cpp
     pricingengines/asian/mc_discr_geom_av_price.cpp
+    pricingengines/asian/mc_discr_geom_av_price_heston.cpp
     pricingengines/barrier/analyticbarrierengine.cpp
     pricingengines/barrier/analyticbinarybarrierengine.cpp
     pricingengines/barrier/discretizedbarrieroption.cpp
@@ -681,6 +689,8 @@ set(QuantLib_SRC
     pricingengines/credit/integralcdsengine.cpp
     pricingengines/credit/isdacdsengine.cpp
     pricingengines/credit/midpointcdsengine.cpp
+    pricingengines/forward/mcforwardeuropeanbsengine.cpp
+    pricingengines/forward/mcforwardeuropeanhestonengine.cpp
     pricingengines/greeks.cpp
     pricingengines/inflation/inflationcapfloorengines.cpp
     pricingengines/lookback/analyticcontinuousfixedlookback.cpp
@@ -722,6 +732,7 @@ set(QuantLib_SRC
     pricingengines/vanilla/exponentialfittinghestonengine.cpp
     pricingengines/vanilla/fdbatesvanillaengine.cpp
     pricingengines/vanilla/fdblackscholesvanillaengine.cpp
+    pricingengines/vanilla/fdcirvanillaengine.cpp
     pricingengines/vanilla/fdcevvanillaengine.cpp
     pricingengines/vanilla/fdhestonhullwhitevanillaengine.cpp
     pricingengines/vanilla/fdhestonvanillaengine.cpp
@@ -752,6 +763,7 @@ set(QuantLib_SRC
     processes/merton76process.cpp
     processes/mfstateprocess.cpp
     processes/ornsteinuhlenbeckprocess.cpp
+    processes/coxingersollrossprocess.cpp
     processes/squarerootprocess.cpp
     processes/stochasticprocessarray.cpp
     quotes/eurodollarfuturesquote.cpp
@@ -885,6 +897,7 @@ set(QuantLib_SRC
     time/daycounters/business252.cpp
     time/daycounters/simpledaycounter.cpp
     time/daycounters/thirty360.cpp
+    time/daycounters/thirty365.cpp
     time/ecb.cpp
     time/frequency.cpp
     time/imm.cpp
@@ -960,6 +973,9 @@ set(QuantLib_HDR
     experimental/amortizingbonds/amortizingcmsratebond.hpp
     experimental/amortizingbonds/amortizingfixedratebond.hpp
     experimental/amortizingbonds/amortizingfloatingratebond.hpp
+    experimental/asian/all.hpp
+    experimental/asian/analytic_cont_geom_av_price_heston.hpp
+    experimental/asian/analytic_discr_geom_av_price_heston.hpp
     experimental/averageois/all.hpp
     experimental/averageois/arithmeticaverageois.hpp
     experimental/averageois/arithmeticoisratehelper.hpp
@@ -1140,6 +1156,8 @@ set(QuantLib_HDR
     experimental/finitedifferences/glued1dmesher.hpp
     experimental/finitedifferences/modtriplebandlinearop.hpp
     experimental/finitedifferences/vanillavppoption.hpp
+    experimental/forward/all.hpp
+    experimental/forward/analytichestonforwardeuropeanengine.hpp
     experimental/futures/all.hpp
     experimental/futures/overnightindexfuture.hpp
     experimental/futures/overnightindexfutureratehelper.hpp
@@ -1434,6 +1452,7 @@ set(QuantLib_HDR
     math/initializers.hpp
     math/integrals/all.hpp
     math/integrals/discreteintegrals.hpp
+    math/integrals/exponentialintegrals.hpp
     math/integrals/filonintegral.hpp
     math/integrals/gaussianorthogonalpolynomial.hpp
     math/integrals/gaussianquadratures.hpp
@@ -1602,6 +1621,7 @@ set(QuantLib_HDR
     methods/finitedifferences/operators/fdmg2op.hpp
     methods/finitedifferences/operators/fdmhestonhullwhiteop.hpp
     methods/finitedifferences/operators/fdmhestonop.hpp
+    methods/finitedifferences/operators/fdmcirop.hpp
     methods/finitedifferences/operators/fdmhullwhiteop.hpp
     methods/finitedifferences/operators/fdmlinearop.hpp
     methods/finitedifferences/operators/fdmlinearopcomposite.hpp
@@ -1645,6 +1665,7 @@ set(QuantLib_HDR
     methods/finitedifferences/solvers/fdmg2solver.hpp
     methods/finitedifferences/solvers/fdmhestonhullwhitesolver.hpp
     methods/finitedifferences/solvers/fdmhestonsolver.hpp
+    methods/finitedifferences/solvers/fdmcirsolver.hpp
     methods/finitedifferences/solvers/fdmhullwhitesolver.hpp
     methods/finitedifferences/solvers/fdmndimsolver.hpp
     methods/finitedifferences/solvers/fdmsimple2dbssolver.hpp
@@ -1886,9 +1907,12 @@ set(QuantLib_HDR
     pricingengines/asian/analytic_discr_geom_av_strike.hpp
     pricingengines/asian/fdblackscholesasianengine.hpp
     pricingengines/asian/mc_discr_arith_av_price.hpp
+    pricingengines/asian/mc_discr_arith_av_price_heston.hpp
     pricingengines/asian/mc_discr_arith_av_strike.hpp
     pricingengines/asian/mc_discr_geom_av_price.hpp
+    pricingengines/asian/mc_discr_geom_av_price_heston.hpp
     pricingengines/asian/mcdiscreteasianengine.hpp
+    pricingengines/asian/mcdiscreteasianenginebase.hpp
     pricingengines/barrier/all.hpp
     pricingengines/barrier/analyticbarrierengine.hpp
     pricingengines/barrier/analyticbinarybarrierengine.hpp
@@ -1930,6 +1954,9 @@ set(QuantLib_HDR
     pricingengines/forward/all.hpp
     pricingengines/forward/forwardengine.hpp
     pricingengines/forward/forwardperformanceengine.hpp
+    pricingengines/forward/mcforwardeuropeanbsengine.hpp
+    pricingengines/forward/mcforwardeuropeanhestonengine.hpp
+    pricingengines/forward/mcforwardvanillaengine.hpp
     pricingengines/forward/mcvarianceswapengine.hpp
     pricingengines/forward/replicatingvarianceswapengine.hpp
     pricingengines/genericmodelengine.hpp
@@ -1988,6 +2015,7 @@ set(QuantLib_HDR
     pricingengines/vanilla/fdbatesvanillaengine.hpp
     pricingengines/vanilla/fdbermudanengine.hpp
     pricingengines/vanilla/fdblackscholesvanillaengine.hpp
+    pricingengines/vanilla/fdcirvanillaengine.hpp
     pricingengines/vanilla/fdcevvanillaengine.hpp
     pricingengines/vanilla/fdconditions.hpp
     pricingengines/vanilla/fddividendamericanengine.hpp
@@ -2032,6 +2060,7 @@ set(QuantLib_HDR
     processes/merton76process.hpp
     processes/mfstateprocess.hpp
     processes/ornsteinuhlenbeckprocess.hpp
+    processes/coxingersollrossprocess.hpp
     processes/squarerootprocess.hpp
     processes/stochasticprocessarray.hpp
     qldefines.hpp
@@ -2165,6 +2194,7 @@ set(QuantLib_HDR
     termstructures/yield/piecewisezerospreadedtermstructure.hpp
     termstructures/yield/quantotermstructure.hpp
     termstructures/yield/ratehelpers.hpp
+    termstructures/yield/ultimateforwardtermstructure.hpp
     termstructures/yield/zerocurve.hpp
     termstructures/yield/zerospreadedtermstructure.hpp
     termstructures/yield/zeroyieldstructure.hpp
@@ -2222,6 +2252,7 @@ set(QuantLib_HDR
     time/dategenerationrule.hpp
     time/daycounter.hpp
     time/daycounters/actual360.hpp
+    time/daycounters/actual364.hpp
     time/daycounters/actual365fixed.hpp
     time/daycounters/actualactual.hpp
     time/daycounters/all.hpp
@@ -2229,6 +2260,7 @@ set(QuantLib_HDR
     time/daycounters/one.hpp
     time/daycounters/simpledaycounter.hpp
     time/daycounters/thirty360.hpp
+    time/daycounters/thirty365.hpp
     time/ecb.hpp
     time/frequency.hpp
     time/imm.hpp
@@ -2238,6 +2270,7 @@ set(QuantLib_HDR
     time/weekday.hpp
     timegrid.hpp
     timeseries.hpp
+    tuple.hpp
     types.hpp
     userconfig.hpp
     utilities/all.hpp

@@ -56,7 +56,7 @@ namespace QuantLib {
         // real numbers, turns 1D quadratures into ND
         class VectorIntegrator : public GaussHermiteIntegration {
         public:
-            VectorIntegrator(Size n, Real mu = 0.0) 
+            explicit VectorIntegrator(Size n, Real mu = 0.0) 
             : GaussHermiteIntegration(n, mu) {}
 
             template <class F> // todo: fix copies.
@@ -178,7 +178,7 @@ namespace QuantLib {
                ext::placeholders::_1)
             );
         }
-    private:
+
         // Same object for all dimensions poses problems when using the 
         //   parallelized integrals version.
         //! The actual integrators.

@@ -1,7 +1,7 @@
 /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 /*
- Copyright (C) 2015 Johannes Goettker-Schnetmann
+ Copyright (C) 2015 Johannes Göttker-Schnetmann
  Copyright (C) 2015 Klaus Spanderen
 
  This file is part of QuantLib, a free-software/open-source library
@@ -52,9 +52,8 @@ namespace QuantLib {
     Disposable<Array> HestonSLVProcess::drift(Time t, const Array& x) const {
         Array tmp(2);
 
-        const Real s = std::exp(x[0]);
-        const Volatility vol
-            = std::sqrt(x[1])*leverageFct_->localVol(t, s, true);
+        const Volatility vol =
+           std::max(1e-8, std::sqrt(x[1])*leverageFct_->localVol(t, x[0], true));
 
         tmp[0] = riskFreeRate()->forwardRate(t, t, Continuous)
                - dividendYield()->forwardRate(t, t, Continuous)
@@ -68,11 +67,10 @@ namespace QuantLib {
     Disposable<Matrix> HestonSLVProcess::diffusion(Time t, const Array& x)
     const {
 
-        const Real s = std::exp(x[0]);
         const Real vol =
-            std::min(1e-8, std::sqrt(x[1]*leverageFct_->localVol(t, s, true)));
+            std::max(1e-8, std::sqrt(x[1])*leverageFct_->localVol(t, x[0], true));
 
-        const Real sigma2 = mixedSigma_ * vol;
+        const Real sigma2 = mixedSigma_ * std::sqrt(x[1]);
         const Real sqrhov = std::sqrt(1.0 - rho_*rho_);
 
         Matrix tmp(2,2);

@@ -29,7 +29,7 @@
 #include <ql/functional.hpp>
 
 
-#include <boost/tuple/tuple.hpp>
+#include <ql/tuple.hpp>
 #include <iostream>
 #include <iomanip>
 
@@ -38,7 +38,7 @@ using namespace QuantLib;
 #if defined(QL_ENABLE_SESSIONS)
 namespace QuantLib {
 
-    Integer sessionId() { return 0; }
+    ThreadKey sessionId() { return 0; }
 
 }
 #endif
@@ -143,8 +143,8 @@ class TestFunction : public CostFunction {
 public:
     typedef ext::function<Real(const Array&)> RealFunc;
     typedef ext::function<Disposable<Array>(const Array&)> ArrayFunc;
-    TestFunction(const RealFunc & f, const ArrayFunc & fs = ArrayFunc()) : f_(f), fs_(fs) {}
-    TestFunction(Real(*f)(const Array&), Disposable<Array>(*fs)(const Array&) = NULL) : f_(f), fs_(fs) {}
+    explicit TestFunction(const RealFunc & f, const ArrayFunc & fs = ArrayFunc()) : f_(f), fs_(fs) {}
+    explicit TestFunction(Real(*f)(const Array&), Disposable<Array>(*fs)(const Array&) = NULL) : f_(f), fs_(fs) {}
     virtual ~TestFunction(){}
     virtual Real value(const Array& x) const {
         return f_(x);

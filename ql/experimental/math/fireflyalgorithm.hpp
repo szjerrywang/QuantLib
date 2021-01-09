@@ -130,7 +130,7 @@ namespace QuantLib {
         std::vector<Array> *xI_;
 
         virtual Real intensityImpl(Real valueX, Real valueY, Real distance) = 0;
-        inline Real distance(const Array& x, const Array& y) {
+        inline Real distance(const Array& x, const Array& y) const {
             Real d = 0.0;
             for (Size i = 0; i < N_; i++) {
                 Real diff = x[i] - y[i];
@@ -138,6 +138,7 @@ namespace QuantLib {
             }
             return d;
         }
+
     private:
         void init(FireflyAlgorithm *fa) {
             x_ = &fa->x_;
@@ -215,14 +216,14 @@ namespace QuantLib {
     */
     template <class Distribution>
     class DistributionRandomWalk : public FireflyAlgorithm::RandomWalk {
-    public:
+      public:
         typedef IsotropicRandomWalk<Distribution, base_generator_type> WalkRandom;
-        DistributionRandomWalk(Distribution dist, 
-		                       Real delta = 0.9, 
-                               unsigned long seed = SeedGenerator::instance().get()) :
-            walkRandom_(base_generator_type(seed), dist, 1, Array(1, 1.0), seed),
-            delta_(delta) {}
-    protected:
+        explicit DistributionRandomWalk(Distribution dist, 
+                                        Real delta = 0.9, 
+                                        unsigned long seed = SeedGenerator::instance().get())
+        : walkRandom_(base_generator_type(seed), dist, 1, Array(1, 1.0), seed),
+          delta_(delta) {}
+      protected:
         void walkImpl(Array & xRW) {
             walkRandom_.nextReal(&xRW[0]);
             xRW *= delta_;
@@ -239,10 +240,10 @@ namespace QuantLib {
     /*  Gaussian random walk
     */
     class GaussianWalk : public DistributionRandomWalk<BoostNormalDistribution> {
-    public:
-        GaussianWalk(Real sigma, 
-		             Real delta = 0.9, 
-                     unsigned long seed = SeedGenerator::instance().get())
+      public:
+        explicit GaussianWalk(Real sigma, 
+                              Real delta = 0.9, 
+                              unsigned long seed = SeedGenerator::instance().get())
         : DistributionRandomWalk<BoostNormalDistribution>(
                            BoostNormalDistribution(0.0, sigma), delta, seed){}
     };
@@ -251,10 +252,11 @@ namespace QuantLib {
     /*  Levy flight random walk
     */
     class LevyFlightWalk : public DistributionRandomWalk<LevyFlightDistribution> {
-    public:
-        LevyFlightWalk(Real alpha, 
-		               Real xm = 0.5, 
-                       Real delta = 0.9, unsigned long seed = SeedGenerator::instance().get())
+      public:
+        explicit LevyFlightWalk(Real alpha, 
+                                Real xm = 0.5, 
+                                Real delta = 0.9,
+                                unsigned long seed = SeedGenerator::instance().get())
         : DistributionRandomWalk<LevyFlightDistribution>(
                             LevyFlightDistribution(xm, alpha), delta, seed) {}
     };
@@ -264,8 +266,11 @@ namespace QuantLib {
     */
     class DecreasingGaussianWalk : public GaussianWalk {
       public:
-        DecreasingGaussianWalk(Real sigma, Real delta = 0.9, unsigned long seed = SeedGenerator::instance().get()):
-            GaussianWalk(sigma, delta, seed), delta0_(delta){}
+        explicit DecreasingGaussianWalk(
+            Real sigma,
+            Real delta = 0.9,
+            unsigned long seed = SeedGenerator::instance().get())
+        : GaussianWalk(sigma, delta, seed), delta0_(delta) {}
       protected:
         void walkImpl(Array & xRW) {
             iteration_++;
