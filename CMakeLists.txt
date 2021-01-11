@@ -1,6 +1,9 @@
-cmake_minimum_required()
+cmake_minimum_required(VERSION 3.10)
 
 project(QuantLib)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(CTest)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/quantlib.cmake)
@@ -39,7 +42,7 @@ endif()
 # directory of the project to includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-find_package(Boost 1.48.0)
+find_package(Boost 1.73.0)
 if (Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif (Boost_FOUND)
