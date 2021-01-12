@@ -1,3 +1,7 @@
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+# FindThreads()
+add_link_options("LINKER:-lpthread")
+
 add_subdirectory(BasketLosses)
 add_subdirectory(BermudanSwaption)
 add_subdirectory(Bonds)

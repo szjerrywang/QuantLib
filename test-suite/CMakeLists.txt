@@ -1,4 +1,9 @@
 # cpp files, this list is maintained manually
+# add_link_options("LINKER:-lpthread")
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+
+find_package( Threads )
 
 set(QuantLib-Test_SRC
     americanoption.cpp
@@ -170,16 +175,16 @@ if (USE_BOOST_DYNAMIC_LIBRARIES)
     add_definitions(-DBOOST_TEST_DYN_LINK)
 endif()
 
-find_package (Boost REQUIRED COMPONENTS unit_test_framework timer system OPTIONAL_COMPONENTS chrono)
+find_package (Boost REQUIRED COMPONENTS unit_test_framework timer system thread OPTIONAL_COMPONENTS chrono)
 
 set (TEST quantlib-test-suite)
 add_executable (${TEST} ${QuantLib-Test_SRC})
-target_link_libraries (${TEST} ${QL_LINK_LIBRARY} ${Boost_LIBRARIES})
+target_link_libraries (${TEST} ${QL_LINK_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 set_property(TARGET ${TEST} PROPERTY PROJECT_LABEL "testsuite")
 
 set (BENCHMARK quantlib-benchmark)
 add_executable (${BENCHMARK} ${BENCHMARK_FILES})
-target_link_libraries (${BENCHMARK} ${QL_LINK_LIBRARY} ${Boost_LIBRARIES})
+target_link_libraries (${BENCHMARK} ${QL_LINK_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 set_property(TARGET ${BENCHMARK} PROPERTY PROJECT_LABEL "benchmark")
 
 add_test (${TEST} ${TEST})
